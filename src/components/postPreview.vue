@@ -11,6 +11,8 @@ const postsStore = usePostsStore();
 const sidebarStore = useSidebarStore();
 const commentsStore = useCommentsStore();
 
+const error = ref("");
+
 const post = computed(() => {
   return postsStore.posts.find((p) => p.id === postsStore.activePostId) || null;
 });
@@ -35,7 +37,7 @@ const handleDelete = async () => {
 
     sidebarStore.close();
   } catch (error) {
-    error.value = `Failed to delete comment, reverting: ${error}`;
+    error.value = `Failed to delete post, reverting: ${error}`;
   }
 };
 

@@ -49,7 +49,7 @@ const usePostsStore = defineStore("posts", () => {
       posts.value = response.data;
       localStorage.setItem(`posts-${userId}`, JSON.stringify(posts.value));
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      postsError.value = `Error fetching posts: ${error}`;
     } finally {
       isLoading.value = false;
     }
@@ -65,9 +65,8 @@ const usePostsStore = defineStore("posts", () => {
         JSON.stringify(posts.value),
       );
       return response.data;
-    } catch (error) {
-      console.error("Error creating post:", error);
-      return null;
+    } finally {
+      isLoading.value = false;
     }
   };
 
@@ -77,8 +76,8 @@ const usePostsStore = defineStore("posts", () => {
 
       posts.value = posts.value.filter((post) => post.id !== postId);
       localStorage.setItem(`posts-${userId}`, JSON.stringify(posts.value));
-    } catch (error) {
-      console.error("Error deleting post:", error);
+    } finally {
+      isLoading.value = false;
     }
   };
 
@@ -97,8 +96,8 @@ const usePostsStore = defineStore("posts", () => {
         `posts-${updatedPost.userId}`,
         JSON.stringify(posts.value),
       );
-    } catch {
-      console.error("Error updating post:", error);
+    } finally {
+      isLoading.value = false;
     }
   };
 

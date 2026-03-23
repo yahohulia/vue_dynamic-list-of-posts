@@ -14,6 +14,7 @@ const activePost = computed(() =>
 
 const titleError = ref("");
 const bodyError = ref("");
+const error = ref("");
 const isLoading = ref(false);
 
 const title = ref(activePost.value?.title || "");
@@ -39,6 +40,7 @@ const validate = (title: string, body: string) => {
 watch([title, body], () => {
   titleError.value = "";
   bodyError.value = "";
+  error.value = "";
 });
 
 const handleSubmit = async (event: Event) => {
@@ -74,6 +76,10 @@ const handleSubmit = async (event: Event) => {
   } finally {
     isLoading.value = false;
   }
+};
+
+const handleDeleteError = () => {
+  error.value = "";
 };
 </script>
 
@@ -121,5 +127,19 @@ const handleSubmit = async (event: Event) => {
         </div>
       </div>
     </form>
+
+    <article v-if="error" class="message is-danger" style="margin-top: 10px">
+      <div class="message-header">
+        <p>Error Message</p>
+        <button
+          @click="handleDeleteError"
+          class="delete"
+          aria-label="delete"
+        ></button>
+      </div>
+      <div class="message-body">
+        {{ error }}
+      </div>
+    </article>
   </div>
 </template>

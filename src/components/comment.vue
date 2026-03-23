@@ -6,6 +6,8 @@ import usePostsStore from "@/stores/postsStore";
 const commentsStore = useCommentsStore();
 const postStore = usePostsStore();
 
+const error = ref("");
+
 const props = defineProps({
   comment: {
     type: Object,
@@ -20,9 +22,14 @@ const handleDelete = async () => {
   try {
     await deleteComment(props.comment.id);
   } catch (error) {
-    console.error("Failed to delete comment, reverting:", error);
+    error.value = `Failed to delete comment, reverting: ${error}`;
+
     commentsStore.addComment(props.comment, props.postId);
   }
+};
+
+const handleDeleteError = () => {
+  error = "";
 };
 </script>
 
@@ -38,5 +45,19 @@ const handleDelete = async () => {
       ></button>
     </div>
     <div class="message-body">{{ comment.body }}</div>
+  </article>
+
+  <article v-if="error" class="message is-danger" style="margin-top: 10px">
+    <div class="message-header">
+      <p>Error Message</p>
+      <button
+        @click="handleDeleteError"
+        class="delete"
+        aria-label="delete"
+      ></button>
+    </div>
+    <div class="message-body">
+      {{ error }}
+    </div>
   </article>
 </template>

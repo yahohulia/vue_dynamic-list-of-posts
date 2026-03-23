@@ -3,7 +3,6 @@ import InputField from "./inputField.vue";
 import TextAreaField from "./textAreaField.vue";
 import useSidebarStore from "@/stores/sidebarStore";
 import { ref, watch } from "vue";
-import { createPost } from "@/api/posts";
 import useUserStore from "@/stores/userStore";
 import usePostsStore from "@/stores/postsStore";
 
@@ -13,6 +12,7 @@ const sidebarStore = useSidebarStore();
 
 const titleError = ref("");
 const bodyError = ref("");
+const error = ref("");
 
 const isLoading = ref(false);
 
@@ -47,10 +47,12 @@ const validate = () => {
 
 watch(title, () => {
   titleError.value = "";
+  error.value = "";
 });
 
 watch(body, () => {
   bodyError.value = "";
+  error.value = "";
 });
 
 const handleSubmit = async (event) => {
@@ -75,10 +77,14 @@ const handleSubmit = async (event) => {
       sidebarStore.open();
     }
   } catch (error) {
-    console.error("Error creating post:", error);
+    error.value = `Error creating post: ${error}`;
   } finally {
     isLoading.value = false;
   }
+};
+
+const handleDeleteError = () => {
+  error.value = "";
 };
 </script>
 
@@ -125,6 +131,20 @@ const handleSubmit = async (event) => {
           </button>
         </div>
       </div>
+
+      <article v-if="error" class="message is-danger" style="margin-top: 10px">
+        <div class="message-header">
+          <p>Error Message</p>
+          <button
+            @click="handleDeleteError"
+            class="delete"
+            aria-label="delete"
+          ></button>
+        </div>
+        <div class="message-body">
+          {{ error }}
+        </div>
+      </article>
     </form>
   </div>
 </template>
