@@ -18,10 +18,11 @@ const sidebarStore = useSidebarStore();
 
 onMounted(async () => {
   commentsStore.init(postsStore.activePostId);
-  if (postsStore.activePostId) {
-    await commentsStore.fetchCommentsByPostId(postsStore.activePostId);
-  }
 });
+
+const handleDeleteError = () => {
+  commentsStore.commentsError = "";
+};
 </script>
 
 <template>
@@ -84,6 +85,24 @@ onMounted(async () => {
               !sidebarStore.editPost
             "
           />
+
+          <article
+            v-if="commentsStore.commentsError"
+            class="message is-danger"
+            style="margin-top: 10px"
+          >
+            <div class="message-header">
+              <p>Error Message</p>
+              <button
+                @click="handleDeleteError"
+                class="delete"
+                aria-label="delete"
+              ></button>
+            </div>
+            <div class="message-body">
+              {{ commentsStore.commentsError }}
+            </div>
+          </article>
         </div>
       </div>
     </div>

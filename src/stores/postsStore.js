@@ -3,6 +3,7 @@ import {
   deletePost,
   getPostById,
   getPostsByUserId,
+  patchPost,
 } from "@/api/posts";
 import { defineStore } from "pinia";
 import { ref } from "vue";
@@ -11,6 +12,7 @@ const usePostsStore = defineStore("posts", () => {
   const posts = ref([]);
   const activePostId = ref(null);
   const isLoading = ref(false);
+  const postsError = ref("");
 
   const init = (userId) => {
     const saved = localStorage.getItem(`posts-${userId}`);
@@ -25,7 +27,7 @@ const usePostsStore = defineStore("posts", () => {
 
       return response.data;
     } catch (error) {
-      console.error("Error fetching post by ID:", error);
+      postsError.value = `Error fetching post by ID: ${error}`;
       return null;
     }
   };
@@ -82,8 +84,9 @@ const usePostsStore = defineStore("posts", () => {
 
   const updatePost = async (postId, updateData) => {
     try {
-      const response = await updatePost(postId, updateData);
+      const response = await patchPost(postId, updateData);
       const updatedPost = response.data;
+
       const index = posts.value.findIndex((post) => post.id === postId);
 
       if (index !== -1) {
@@ -103,6 +106,7 @@ const usePostsStore = defineStore("posts", () => {
     posts,
     activePostId,
     isLoading,
+    postsError,
     init,
     addPost,
     getPostByIdFromServer,

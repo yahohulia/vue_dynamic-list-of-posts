@@ -41,6 +41,10 @@ const handleAddNewPostClick = () => {
   sidebarStore.openNewPost = true;
   sidebarStore.open();
 };
+
+const handleDeleteError = () => {
+  postsStore.postsError = "";
+};
 </script>
 
 <template>
@@ -100,6 +104,24 @@ const handleAddNewPostClick = () => {
           <section class="has-text-centered" v-else>
             <p>No posts yet.</p>
           </section>
+
+          <article
+            v-if="postsStore.postsError"
+            class="message is-danger"
+            style="margin-top: 10px"
+          >
+            <div class="message-header">
+              <p>Error Message</p>
+              <button
+                @click="handleDeleteError"
+                class="delete"
+                aria-label="delete"
+              ></button>
+            </div>
+            <div class="message-body">
+              {{ postsStore.postsError }}
+            </div>
+          </article>
         </template>
       </div>
     </div>

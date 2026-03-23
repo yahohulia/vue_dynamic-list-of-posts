@@ -16,7 +16,7 @@ export const createPost = (postData) => {
   return client.post("/posts", postData);
 };
 
-export const updatePost = (postId, postData) => {
+export const patchPost = (postId, postData) => {
   return client.patch("/posts/" + postId, postData);
 };
 

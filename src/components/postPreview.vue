@@ -4,14 +4,16 @@ import useCommentsStore from "@/stores/commentsStore";
 import usePostsStore from "@/stores/postsStore";
 import useSidebarStore from "@/stores/sidebarStore";
 import useUserStore from "@/stores/userStore";
-import { ref, watchEffect } from "vue";
+import { computed, ref, watchEffect } from "vue";
 
 const userStore = useUserStore();
 const postsStore = usePostsStore();
 const sidebarStore = useSidebarStore();
 const commentsStore = useCommentsStore();
 
-const post = ref(null);
+const post = computed(() => {
+  return postsStore.posts.find((p) => p.id === postsStore.activePostId) || null;
+});
 
 watchEffect(async () => {
   if (
@@ -20,15 +22,10 @@ watchEffect(async () => {
     postsStore.activePostId
   ) {
     try {
-      const response = await getPostById(postsStore.activePostId);
-      post.value = response.data;
-
       await commentsStore.fetchCommentsByPostId(postsStore.activePostId);
     } catch (error) {
-      console.error("Error fetching post:", error);
+      error.value = `Error fetching data: ${error}.\n Please try again..`;
     }
-  } else {
-    post.value = null;
   }
 });
 
@@ -38,12 +35,16 @@ const handleDelete = async () => {
 
     sidebarStore.close();
   } catch (error) {
-    console.error("Failed to delete comment, reverting:", error);
+    error.value = `Failed to delete comment, reverting: ${error}`;
   }
 };
 
 const handleUpdate = () => {
   sidebarStore.editPost = true;
+};
+
+const handleDeleteError = () => {
+  error.value = "";
 };
 </script>
 
@@ -65,4 +66,18 @@ const handleUpdate = () => {
     </div>
     <p data-cy="PostBody">{{ post.body }}</p>
   </div>
+
+  <article v-if="error" class="message is-danger" style="margin-top: 10px">
+    <div class="message-header">
+      <p>Error Message</p>
+      <button
+        @click="handleDeleteError"
+        class="delete"
+        aria-label="delete"
+      ></button>
+    </div>
+    <div class="message-body">
+      {{ error }}
+    </div>
+  </article>
 </template>

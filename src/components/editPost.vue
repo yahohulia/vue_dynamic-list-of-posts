@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
-import { updatePost } from "@/api/posts";
 import useSidebarStore from "@/stores/sidebarStore";
 import usePostsStore from "@/stores/postsStore";
 import TextAreaField from "./textAreaField.vue";
@@ -67,7 +66,7 @@ const handleSubmit = async (event: Event) => {
   isLoading.value = true;
 
   try {
-    await updatePost(postsStore.activePostId, updatedData);
+    postsStore.updatePost(postsStore.activePostId, updatedData);
 
     sidebarStore.editPost = false;
   } catch (error) {

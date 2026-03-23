@@ -5,6 +5,7 @@ import { getCommentsByPostId } from "@/api/comments";
 const useCommentsStore = defineStore("comments", () => {
   const comments = ref([]);
   const isLoading = ref(false);
+  const commentsError = ref("");
 
   const init = (postId) => {
     const saved = localStorage.getItem(`comments-${postId}`);
@@ -24,7 +25,7 @@ const useCommentsStore = defineStore("comments", () => {
         JSON.stringify(comments.value),
       );
     } catch (error) {
-      console.error("Error loading comments:", error);
+      commentsError.value = `Error loading comments: ${error}. \n Please try again..`;
     } finally {
       isLoading.value = false;
     }
@@ -45,6 +46,7 @@ const useCommentsStore = defineStore("comments", () => {
   return {
     comments,
     isLoading,
+    commentsError,
     fetchCommentsByPostId,
     addComment,
     removeComment,

@@ -15,6 +15,7 @@ const commentsStore = useCommentsStore();
 const nameError = ref("");
 const emailError = ref("");
 const bodyError = ref("");
+const error = ref("");
 
 const isLoading = ref(false);
 
@@ -24,6 +25,18 @@ const body = ref("");
 
 const handleCancel = () => {
   sidebarStore.writeACommentBtn = false;
+
+  authorName.value = "";
+  authorEmail.value = "";
+  body.value = "";
+
+  nameError.value = "";
+  emailError.value = "";
+  bodyError.value = "";
+};
+
+const handleDeleteError = () => {
+  error.value = "";
 };
 
 const validate = () => {
@@ -58,14 +71,17 @@ const validate = () => {
 
 watch(authorName, () => {
   nameError.value = "";
+  error.value = "";
 });
 
 watch(authorEmail, () => {
   emailError.value = "";
+  error.value = "";
 });
 
 watch(body, () => {
   bodyError.value = "";
+  error.value = "";
 });
 
 const handleSubmit = async (event) => {
@@ -90,7 +106,7 @@ const handleSubmit = async (event) => {
 
     body.value = "";
   } catch (error) {
-    console.error("Error creating comment:", error);
+    error.value = `Error creating comment: ${error}`;
   } finally {
     isLoading.value = false;
   }
@@ -146,4 +162,17 @@ const handleSubmit = async (event) => {
       </div>
     </div>
   </form>
+  <article v-if="error" class="message is-danger" style="margin-top: 10px">
+    <div class="message-header">
+      <p>Error Message</p>
+      <button
+        @click="handleDeleteError"
+        class="delete"
+        aria-label="delete"
+      ></button>
+    </div>
+    <div class="message-body">
+      {{ error }}
+    </div>
+  </article>
 </template>
