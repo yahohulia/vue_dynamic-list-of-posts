@@ -1,5 +1,4 @@
 <script setup>
-import { getPostById } from "@/api/posts";
 import useCommentsStore from "@/stores/commentsStore";
 import usePostsStore from "@/stores/postsStore";
 import useSidebarStore from "@/stores/sidebarStore";

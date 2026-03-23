@@ -2,6 +2,7 @@
 import { deleteComment } from "@/api/comments";
 import useCommentsStore from "@/stores/commentsStore";
 import usePostsStore from "@/stores/postsStore";
+import { ref } from "vue";
 
 const commentsStore = useCommentsStore();
 const postStore = usePostsStore();
@@ -29,7 +30,7 @@ const handleDelete = async () => {
 };
 
 const handleDeleteError = () => {
-  error = "";
+  error.value = "";
 };
 </script>
 
